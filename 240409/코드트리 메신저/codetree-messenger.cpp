@@ -32,7 +32,7 @@ void change_parents(int c1, int c2) {
     } else {
         childs[parent[c2]].second = c1;
     }
-    parent[c1];
+    tmp = parent[c1];
     parent[c1] = parent[c2];
     parent[c2] = tmp;
 
