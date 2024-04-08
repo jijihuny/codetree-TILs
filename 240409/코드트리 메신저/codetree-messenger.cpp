@@ -60,6 +60,7 @@ void dfs(int &count, const int &c) {
 
 int show_count(int c) {
     int count = 0;
+    if(off[c]) return 0;
     dfs(count, c);
     return count;
 }
