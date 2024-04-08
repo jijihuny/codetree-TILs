@@ -42,12 +42,12 @@ void dfs(int &count, const int &c) {
     static int depth = 0;
     depth++;
 
-    if(childs[c].first && !off[childs[c].first] && depth <= authority[childs[c].first]) {
-        count++;
+    if(childs[c].first && !off[childs[c].first]) {
+        if(depth <= authority[childs[c].first]) count++;
         dfs(count, childs[c].first);
     }
-    if(childs[c].second && !off[childs[c].second] && depth <= authority[childs[c].second]) {
-        count++;
+    if(childs[c].second && !off[childs[c].second]) {
+        if(depth <= authority[childs[c].second]) count++;
         dfs(count, childs[c].second);
     }
 
