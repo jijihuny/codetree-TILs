@@ -45,14 +45,14 @@ void dfs(int &count, const int &c) {
     if(childs[c].first && !off[childs[c].first]) {
         if(depth <= authority[childs[c].first]) {
             count++;
+            dfs(count, childs[c].first);
         }
-        dfs(count, childs[c].first);
     }
     if(childs[c].second && !off[childs[c].second]) {
         if(depth <= authority[childs[c].second]) {
             count++;
+            dfs(count, childs[c].second);
         }
-        dfs(count, childs[c].second);
     }
 
     depth--;
@@ -60,7 +60,6 @@ void dfs(int &count, const int &c) {
 
 int show_count(int c) {
     int count = 0;
-    if(off[c]) return 0;
     dfs(count, c);
     return count;
 }
