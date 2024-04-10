@@ -10,8 +10,8 @@ const int MAX_N = 100000, MAX_M = 100000;
 const int MAX_P = 2000;
 int Q, P;
 
-typedef unsigned long long bigint;
-bigint N = 0ull, M = 0ull;
+typedef long long bigint;
+bigint N = 0ll, M = 0ll;
 
 map<int, int> pid_to_idx;
 int pids[MAX_P];
@@ -67,8 +67,8 @@ priority_queue<int, vector<int>, QCompare> qq;
  * Q * K <= 20000
  * Q * K * (logP + logK) <= 400000
 */
-bigint dr[] = {-1ull, 1ull, 0ull, 0ull};
-bigint dc[] = {0ull, 0ull, -1ull, 1ull};
+bigint dr[] = {-1ll, 1ll, 0ll, 0ll};
+bigint dc[] = {0ll, 0ll, -1ll, 1ll};
 
 bool greater_pos(int ar, int ac, int br, int bc) {
     if(ar + ac != br + bc) return ar + ac > br + bc;
@@ -88,8 +88,8 @@ void progress(const int &K, const int &S) {
         bigint d = dist[rabbit];
         int fr = 0, fc = 0;
         for(int dir = 0; dir < 4; dir++) {
-            bigint tr = (bigint)row[rabbit] + dr[dir] * d - 1ull;
-            bigint tc = (bigint)col[rabbit] + dc[dir] * d - 1ull;
+            bigint tr = (bigint)row[rabbit] + dr[dir] * d - 1ll;
+            bigint tc = (bigint)col[rabbit] + dc[dir] * d - 1ll;
             // tr *= dr[dir] ? dr[dir] : 1;
             // tc *= dc[dir] ? dc[dir] : 1;
             int nr, nc;
@@ -108,10 +108,10 @@ void progress(const int &K, const int &S) {
              * 12 - 4
              * 13 - 5
             */
-           if(tr < 0ull) tr *= -1ull;
-           if(tc < 0ull) tc *= -1ull;
-            nr = (tr / (N - 1ull)) % 2ull == 0ull ? tr % (N - 1ull) + 1ull : N - tr % (N - 1ull);
-            nc = (tc / (M - 1ull)) % 2ull == 0ull ? tc % (M - 1ull) + 1ull : M - tc % (M - 1ull);
+           if(tr < 0ll) tr *= -1ll;
+           if(tc < 0ll) tc *= -1ll;
+            nr = (tr / (N - 1ll)) % 2ll == 0ll ? tr % (N - 1ll) + 1ll : N - tr % (N - 1ll);
+            nc = (tc / (M - 1ll)) % 2ll == 0ll ? tc % (M - 1ll) + 1ll : M - tc % (M - 1ll);
             
             if(greater_pos(nr, nc, fr, fc)) {
                 fr = nr;
