@@ -60,17 +60,24 @@ void init() {
  * O(1)
 */
 void move_all(const int &m_src, const int &m_dst) {
+    // cout << "a";
+    // cout << "b";
     if(belt[m_src].count == 0) { 
         cout << belt[m_dst].count << endl;
         return;
     }
-
+    // cout << "a";
     Node *h_dst = belt[m_dst].head;
     belt[m_dst].head = belt[m_src].head;
+    // cout << "a";
     belt[m_src].tail->next = h_dst;
+    // cout << "a";
     if(h_dst)
         h_dst->prev = belt[m_src].tail;
-    belt[m_src].head = belt[m_src].tail = 0;
+    else
+        belt[m_dst].tail = belt[m_src].tail;
+    belt[m_src].head = 0;
+    // belt[m_src].tail = (Node *)0;
     belt[m_dst].count += belt[m_src].count;
     belt[m_src].count = 0;
     cout << belt[m_dst].count << endl;
@@ -198,7 +205,6 @@ void get_present_info(const int &p_num) {
     Node *node = &present[p_num];
 
     int a = -1, b = -1;
-
     if(node->prev) a = node->prev->p_num;
     if(node->next) b = node->next->p_num;
 
