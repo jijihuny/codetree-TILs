@@ -103,9 +103,13 @@ void swap_head(const int &m_src, const int &m_dst) {
 
     if(h_src && h_src->next) {
         h_src_next = h_src->next;
+        h_src->next = 0;
+        h_src_next->prev = 0;
     }
     if(h_dst && h_dst->next) {
         h_dst_next = h_dst->next;
+        h_dst->next = 0;
+        h_dst_next->prev = 0;
     } 
     
     if(h_src && h_dst) {
