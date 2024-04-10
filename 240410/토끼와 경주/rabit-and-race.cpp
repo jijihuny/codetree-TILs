@@ -2,6 +2,7 @@
 #include <queue>
 #include <map>
 #include <vector>
+#include <set>
 
 using namespace std;
 
@@ -76,9 +77,10 @@ bool greater_pos(int ar, int ac, int br, int bc) {
 }
 
 priority_queue<int, vector<int>, KCompare> pq;
-
+set<int> mf;
 void progress(const int &K, const int &S) {
-    if(!pq.empty()) { pq = {}; }
+    if(!pq.empty() || !mf.empty()) { pq = {}; mf.clear(); }
+
     for(int i = 0; i < K; i++) {
         const int rabbit = qq.top();
         qq.pop();
@@ -123,7 +125,11 @@ void progress(const int &K, const int &S) {
         col[rabbit] = fc;
         jump[rabbit]++;
         qq.push(rabbit);
-        pq.push(rabbit);
+        mf.insert(rabbit);
+    }
+
+    for(auto r : mf) {
+        pq.push(r);
     }
 
     const int kr = pq.top();
