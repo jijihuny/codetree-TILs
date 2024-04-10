@@ -17,7 +17,7 @@ typedef struct {
 } Task;
 
 struct Cmp {
-    bool operator()(const Task &a, const Task &b) const {
+    bool operator()(const Task a, const Task b) const {
         if(a.priority == b.priority) return a.t < b.t;
         return a.priority > b.priority;
     }
@@ -30,21 +30,21 @@ typedef priority_queue<Task, vector<Task>, Cmp> WaitingQueue;
 // waiting queues
 
 // blacklist
-map<string, int> bl;
+unordered_map<string, int> bl;
 
-map<string, WaitingQueue> waiting_queues;
+unordered_map<string, WaitingQueue> waiting_queues;
 priority_queue<int, vector<int>, greater<int>> waiting_judgers;
 set<string> waiting_url;
 
-map<int, Task> judging_task;
+unordered_map<int, Task> judging_task;
 set<string> judging_domain;
 
-string split_url(const string &url) {
+string split_url(const string url) {
     auto sep = url.find_first_of('/');
     return url.substr(0, sep);
 } 
 
-void request(const int &t, const int &p, const string &url) {
+void request(const int t, const int p, const string url) {
     if(waiting_url.find(url) != waiting_url.end()) { return; }
     string domain = split_url(url);
 
@@ -52,12 +52,12 @@ void request(const int &t, const int &p, const string &url) {
     waiting_url.insert(url);
 }
 
-void fetch(const int &t) {
+void fetch(const int t) {
     if(waiting_judgers.size() == 0) { return; }
 
     Task task = {0, INT32_MAX};
 
-    for(auto &dq : waiting_queues) {
+    for(auto dq : waiting_queues) {
         auto domain = dq.first;
         auto que = dq.second;
         if(que.empty()) { continue; }
@@ -80,7 +80,7 @@ void fetch(const int &t) {
     waiting_queues[task.domain].pop();
 }
 
-void terminate(const int &t, const int &j_id) {
+void terminate(const int t, const int j_id) {
     if(judging_task.empty()) { return; }
     if(judging_task.find(j_id) == judging_task.end()) { return; }
     string domain = judging_task[j_id].domain;
@@ -91,7 +91,7 @@ void terminate(const int &t, const int &j_id) {
     waiting_judgers.push(j_id);
 }
 
-void count(const int &t) {
+void count(const int t) {
     if(waiting_url.empty()) {
         cout<< 0 << '\n';
         return;
@@ -104,6 +104,10 @@ int main() {
     int code, t, N, p, j_id;
     string url;
     cin >> Q;
+
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    cout.tie(0);
 
     for(int i = 0; i < Q; ++i) {
         cin >> code;
