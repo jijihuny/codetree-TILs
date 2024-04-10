@@ -147,7 +147,7 @@ void change_dist(const int &pid, const bigint &L) {
  * O(P)
 */
 int best_rabbit() {
-    int bscore = 0;
+    bigint bscore = 0;
     for(int i = 0; i < P; i++) {
         if(score[i] + total - moved[i] > bscore) { bscore = score[i] + total - moved[i]; }
     }
