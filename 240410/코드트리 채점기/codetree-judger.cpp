@@ -105,6 +105,10 @@ int main() {
     string url;
     cin >> Q;
 
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    cout.tie(0);
+
     for(int i = 0; i < Q; ++i) {
         cin >> code;
         // cout<<"hello"<<"\n";
