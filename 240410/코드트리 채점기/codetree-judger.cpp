@@ -2,7 +2,8 @@
 #include <string>
 #include <queue>
 #include <map>
-#include <set>
+#include <unordered_map>
+#include <unordered_set>
 #include <functional>
 
 using namespace std;
@@ -34,10 +35,10 @@ unordered_map<string, int> bl;
 
 unordered_map<string, WaitingQueue> waiting_queues;
 priority_queue<int, vector<int>, greater<int>> waiting_judgers;
-set<string> waiting_url;
+unordered_set<string> waiting_url;
 
 unordered_map<int, Task> judging_task;
-set<string> judging_domain;
+unordered_set<string> judging_domain;
 
 string split_url(const string url) {
     auto sep = url.find_first_of('/');
