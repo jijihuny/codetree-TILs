@@ -146,7 +146,7 @@ void change_dist(const int &pid, const bigint &L) {
  * 제일 높은 점수 찾기
  * O(P)
 */
-int best_rabbit() {
+bigint best_rabbit() {
     bigint bscore = 0;
     for(int i = 0; i < P; i++) {
         if(score[i] + total - moved[i] > bscore) { bscore = score[i] + total - moved[i]; }
