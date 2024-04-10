@@ -39,12 +39,12 @@ set<string> waiting_url;
 map<int, Task> judging_task;
 set<string> judging_domain;
 
-string split_url(const &string url) {
+string split_url(const string &url) {
     auto sep = url.find_first_of('/');
     return url.substr(0, sep);
 } 
 
-void request(const int &t, const int &p, const &string url) {
+void request(const int &t, const int &p, const string &url) {
     if(waiting_url.find(url) != waiting_url.end()) { return; }
     string domain = split_url(url);
 
@@ -91,7 +91,7 @@ void terminate(const int &t, const int &j_id) {
     waiting_judgers.push(j_id);
 }
 
-void count(const int t) {
+void count(const int &t) {
     if(waiting_url.empty()) {
         cout<< 0 << '\n';
         return;
