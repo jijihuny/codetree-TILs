@@ -179,8 +179,7 @@ int main() {
                 cin >> N >> M >> P;
                 bigint tmp_d;
                 for(int r = 0; r < P; r++) {
-                    cin >> pids[r] >> tmp_d;
-                    dist[r] = tmp_d > (bigint)MAX_N ? MAX_N : (int)tmp_d;
+                    cin >> pids[r] >> dist[r];
                     pid_to_idx[pids[r]] = r;
                     row[r] = 1;
                     col[r] = 1;
