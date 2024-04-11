@@ -174,7 +174,7 @@ void swap_head(const int &m_src, const int &m_dst) {
 void divide(const int &m_src, const int &m_dst) {
     int n = belt[m_src].count;
     if(n <= 1) {
-        cout << n << endl;
+        cout << belt[m_dst].count << endl;
         return;
     }
 
