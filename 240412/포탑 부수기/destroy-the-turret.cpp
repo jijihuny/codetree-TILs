@@ -73,8 +73,6 @@ vector<int> select_strong_weak() {
         }
     }
 
-    attack[weak_row][weak_col] += N + M;
-
     return {weak_row, weak_col, strong_row, strong_col};
 }
 
@@ -86,6 +84,7 @@ int dc[] = {1, 0, -1, 0};
 int dp[10][10]{};
 int dir[10][10]{};
 bool visited[10][10]{};
+int count = 0;
 
 int razor_attack(const int &weak_row, const int &weak_col, const int &strong_row, const int &strong_col) {
     int nr, nc;
@@ -153,6 +152,7 @@ int razor_attack(const int &weak_row, const int &weak_col, const int &strong_row
         attack[nr][nc] = max(attack[nr][nc] - half, 0);
         if(attack[nr][nc] == 0) {
             dead[nr][nc] = true;
+            count++;
         }
 
         visited[nr][nc] = true;
@@ -167,6 +167,7 @@ int razor_attack(const int &weak_row, const int &weak_col, const int &strong_row
     
     if(attack[nr][nc] == 0) {
         dead[nr][nc] = true;
+        count++;
     }
     visited[nr][nc] = true;
 
@@ -183,6 +184,7 @@ void attack_bomb(const int &weak_row, const int &weak_col, const int &strong_row
     attack[nr][nc] = max(attack[nr][nc] - att, 0);
     if(attack[nr][nc] == 0) {
         dead[nr][nc] = true;
+        count++;
     }
     visited[nr][nc] = true;
 
@@ -191,31 +193,30 @@ void attack_bomb(const int &weak_row, const int &weak_col, const int &strong_row
         if(nr < 0) nr += N;
         nc = (strong_col + ac[i]) % M;
         if(nc < 0) nc += M;
-
-        if(dead[nr][nc]) { continue; }
+        if(dead[nr][nc] || (nr == weak_row && nc == weak_col)) { continue; }
 
         attack[nr][nc] = max(attack[nr][nc] - half, 0);
         if(attack[nr][nc] == 0) {
             dead[nr][nc] = true;
+            count++;
         }
         visited[nr][nc] = true;
     }
 
-    attack[strong_row][strong_col] = max(attack[strong_row][strong_col] - att, 0);
-    if(attack[strong_row][strong_col] == 0) {
-        dead[strong_row][strong_col] = true;
-    }
-    visited[strong_row][strong_col]  = true;
+    // attack[strong_row][strong_col] = max(attack[strong_row][strong_col] - att, 0);
+    // if(attack[strong_row][strong_col] == 0) {
+    //     dead[strong_row][strong_col] = true;
+    // }
+    // visited[strong_row][strong_col]  = true;
 }
 
 void progress(const int &turn) {
     auto list = select_strong_weak();
-
     const int weak_row = list[0];
     const int weak_col = list[1];
     const int strong_row = list[2];
     const int strong_col = list[3];
-
+    attack[weak_row][weak_col] += N + M;
     fill(visited[0], visited[N - 1] + M, false);
 
     if(razor_attack(weak_row, weak_col, strong_row, strong_col) < 0) {
@@ -242,11 +243,13 @@ int main() {
             cin >> attack[r][c];
             if(attack[r][c] <= 0) {
                 dead[r][c] = true;
+                count++;
             }
         }
     }
 
-    for(int turn = 0; turn < K; turn++) {
+    for(int turn = 1; turn <= K; turn++) {
+        if(count == N * M - 1) break;
         progress(turn);
     }
 
