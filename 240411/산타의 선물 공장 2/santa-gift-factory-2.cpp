@@ -60,26 +60,30 @@ void init() {
  * O(1)
 */
 void move_all(const int &m_src, const int &m_dst) {
-    // cout << "a";
-    // cout << "b";
     if(belt[m_src].count == 0) { 
         cout << belt[m_dst].count << endl;
         return;
     }
-    // cout << "a";
-    Node *h_dst = belt[m_dst].head;
-    belt[m_dst].head = belt[m_src].head;
-    // cout << "a";
-    belt[m_src].tail->next = h_dst;
-    // cout << "a";
-    if(h_dst)
-        h_dst->prev = belt[m_src].tail;
-    else
-        belt[m_dst].tail = belt[m_src].tail;
-    belt[m_src].head = 0;
-    // belt[m_src].tail = (Node *)0;
+    Node *head_src = belt[m_src].head;
+    Node *tail_src = belt[m_src].tail;
+    Node *head_dst = belt[m_dst].head;
+
+    // switch head
+    belt[m_dst].head = head_src;
+    
+    if(head_dst) {
+        // connect two list
+        head_dst->prev = tail_src;
+        tail_src->next = head_dst;
+    } else {
+        // moves tail pointer
+        belt[m_dst].tail = tail_src;
+    }
+
+    //change count.
     belt[m_dst].count += belt[m_src].count;
     belt[m_src].count = 0;
+    belt[m_src].head = belt[m_src].tail = 0;
     cout << belt[m_dst].count << endl;
 }
 
@@ -108,51 +112,54 @@ void swap_head(const int &m_src, const int &m_dst) {
     h_src = belt[m_src].head;
     h_dst = belt[m_dst].head;
 
-    if(h_src && h_src->next) {
-        h_src_next = h_src->next;
-        h_src->next = 0;
-        h_src_next->prev = 0;
-    }
-    if(h_dst && h_dst->next) {
-        h_dst_next = h_dst->next;
-        h_dst->next = 0;
-        h_dst_next->prev = 0;
-    } 
-    
-    if(h_src && h_dst) {
-        belt[m_src].head = h_dst;
-        belt[m_dst].head = h_src;
-        if(h_src_next) {
-            belt[m_src].head->next = h_src_next;
-            h_src_next->prev = belt[m_src].head;
+    // Pop phase
+    if(h_src) {
+        // change head
+        if(h_src->next) {
+            h_src_next = h_src->next;
+            h_src->next = 0;
+            h_src_next->prev = 0;
+            belt[m_src].head = h_src_next;
         } else {
-            belt[m_src].tail = h_dst;
+            // no element
+            belt[m_src].head = belt[m_src].tail = 0;
         }
+        belt[m_src].count--;
+    }
+    if(h_dst) {
+        if(h_dst->next) {
+            h_dst_next = h_dst->next;
+            h_dst->next = 0;
+            h_dst_next->prev = 0;
+            belt[m_dst].head = h_dst_next;
+        } else {
+            belt[m_dst].head = belt[m_src].tail = 0;
+        }
+        belt[m_dst].count--;
+    } 
+
+    // Push phase
+    if(h_src) {
+        belt[m_dst].head = h_src;
+        belt[m_dst].count++;
         if(h_dst_next) {
-            belt[m_dst].head->next = h_dst_next;
-            h_dst_next->prev = belt[m_dst].head;
+            h_src->next = h_dst_next;
+            h_dst_next->prev = h_src;
         } else {
             belt[m_dst].tail = h_src;
         }
-    } else if(!h_src && h_dst) {
-        belt[m_src].head = belt[m_src].tail = h_dst;
+    }
+    if(h_dst) {
+        belt[m_src].head = h_dst;
         belt[m_src].count++;
-        belt[m_dst].head = h_dst_next;
-        belt[m_dst].count--;
-        if(!h_dst_next) {
-            belt[m_dst].tail = 0;
-        } 
-    } else if(h_src && !h_dst) {
-        belt[m_dst].head = belt[m_dst].tail = h_src;
-        belt[m_dst].count++;
-        belt[m_src].head = h_src_next;
-        belt[m_src].count--;
-        if(!h_src_next) {
-            belt[m_src].tail = 0;
+        if(h_src_next) {
+            h_dst->next = h_src_next;
+            h_src_next->prev = h_dst;
+        } else {
+            belt[m_src].tail = h_dst;
         }
     }
 
-    
     cout << belt[m_dst].count << endl;
 }
 
@@ -176,17 +183,22 @@ void divide(const int &m_src, const int &m_dst) {
     int i = 1;
     Node *head = belt[m_src].head;
     Node *tail = head;
+    // find mid
     while(i < n) {
         ++i;
         tail = tail->next;
     }
+    // change head
     belt[m_src].head = tail->next;
-    if(belt[m_src].head)
-        belt[m_src].head->prev = 0;
+    belt[m_src].head->prev = 0;
     belt[m_src].count -= n;
+
+    // connect
     tail->next = belt[m_dst].head;
     if(tail->next) {
         tail->next->prev = tail;
+    } else {
+        belt[m_dst].tail = tail;
     }
     belt[m_dst].head = head;
     belt[m_dst].count += n;
