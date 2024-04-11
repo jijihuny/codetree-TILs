@@ -200,6 +200,12 @@ void attack_bomb(const int &weak_row, const int &weak_col, const int &strong_row
         }
         visited[nr][nc] = true;
     }
+
+    attack[strong_row][strong_col] = max(attack[strong_row][strong_col] - att, 0);
+    if(attack[strong_row][strong_col] == 0) {
+        dead[strong_row][strong_col] = true;
+    }
+    visited[strong_row][strong_col]  = true;
 }
 
 void progress(const int &turn) {
