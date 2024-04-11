@@ -133,7 +133,7 @@ void swap_head(const int &m_src, const int &m_dst) {
             h_dst_next->prev = 0;
             belt[m_dst].head = h_dst_next;
         } else {
-            belt[m_dst].head = belt[m_src].tail = 0;
+            belt[m_dst].head = belt[m_dst].tail = 0;
         }
         belt[m_dst].count--;
     } 
