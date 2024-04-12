@@ -245,7 +245,8 @@ void fifth(const int &b_num) {
     }
     belt[b_num].broken = true;
     int next;
-    for(next = (b_num + 1) % M; next != b_num; next = (next + 1) % M) {
+    for(next = (b_num + 1) % (M + 1); next != b_num; next = (next + 1) % (M + 1)) {
+        if(next == 0) { continue; }
         if(!belt[next].broken) { break; }
     }
 
