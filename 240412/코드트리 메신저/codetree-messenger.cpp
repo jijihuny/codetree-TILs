@@ -71,7 +71,7 @@ void switch_on_off(const int &c) {
     int node = parents[c];
     int level = 1;
     off[c] = !off[c];
-    while(node != 0 && !off[node]) {
+    while(node != 0) {
         for(int d = 0; d < MAX_D + 1 - level; d++) {
             if(off[c]) {
                 count[node][d] -= count[c][d + level];
@@ -79,6 +79,7 @@ void switch_on_off(const int &c) {
                 count[node][d] += count[c][d + level];
             }
         }
+        if(off[node]) break;
         node = parents[node];
         level++;
     }
