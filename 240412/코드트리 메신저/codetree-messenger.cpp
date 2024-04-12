@@ -59,9 +59,8 @@ void init() {
         int node = parents[i];
         int level = 1;
         while(node != 0) {
-            for(int d = 0; d < MAX_D - level; d++) {
-                if(count[i][d + level] == 0) {break;}
-                count[node][d] += count[i][d + level];
+            for(int d = 0; d <= authority[i] - level; d++) {
+                count[node][d]++;
             }
             node = parents[node];
             level++;
