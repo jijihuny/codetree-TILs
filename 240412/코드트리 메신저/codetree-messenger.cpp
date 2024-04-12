@@ -101,7 +101,7 @@ void change_authority(const int &c, int power) {
             for(int d = max(prev_power + 1 - level, 0); d <= power - level; d++) {
                 count[node][d]++;
             }
-
+            if(off[node]) break;
             node = parents[node];
             level++;
         }
@@ -114,7 +114,7 @@ void change_authority(const int &c, int power) {
             for(int d = max(power + 1 - level, 0); d <= prev_power - level; d++) {
                 count[node][d]--;
             }
-
+            if(off[node]) break;
             node = parents[node];
             level++;
         }
