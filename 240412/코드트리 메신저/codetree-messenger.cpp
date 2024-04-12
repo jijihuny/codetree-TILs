@@ -86,7 +86,6 @@ void switch_on_off(const int &c) {
 }
 
 void change_authority(const int &c, int power) {
-    if(off[c]) { return; }
     
     int prev_power = authority[c];
     power = min(MAX_D, power);
@@ -96,8 +95,8 @@ void change_authority(const int &c, int power) {
         for(int d = prev_power + 1; d <= power; d++) {
             count[c][d]++;
         }
-
-        while(level <= power) {
+        
+        while(level <= power && !off[c]) {
             for(int d = max(prev_power + 1 - level, 0); d <= power - level; d++) {
                 count[node][d]++;
             }
@@ -110,7 +109,7 @@ void change_authority(const int &c, int power) {
             count[c][d]--;
         }
 
-        while(level <= prev_power) {
+        while(level <= prev_power && !off[c]) {
             for(int d = max(power + 1 - level, 0); d <= prev_power - level; d++) {
                 count[node][d]--;
             }
