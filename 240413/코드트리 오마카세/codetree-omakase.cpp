@@ -93,6 +93,7 @@ void insert(const bigint &t, const bigint &x, const string &name, const int &n) 
     if(it != sushi[idx[name]].end()) {
         needs[idx[name]] -= it->second;
         sushi_count -= it->second;
+        sushi[idx[name]].erase(it);
         if(needs[idx[name]] == 0) {
             idx.erase(name);
             customer_count--;
