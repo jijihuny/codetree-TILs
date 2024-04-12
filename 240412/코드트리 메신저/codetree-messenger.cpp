@@ -35,15 +35,13 @@ const int MAX_D = 20;
 int Q, N;
 
 // 나로부터 부모까지 영향
-int count[MAX_N + 1][MAX_D]{};
+int count[MAX_N + 1][MAX_D + 1]{};
 // 부모
 int parents[MAX_N + 1]{};
 int authority[MAX_N + 1]{};
 bool off[MAX_N + 1]{};
 
 void init() {
-    int p;
-    int a;
 
     for(int i = 1; i <= N; i++) {
         cin >> parents[i];
@@ -51,6 +49,7 @@ void init() {
 
     for(int i = 1; i <= N; i++) {
         cin >> authority[i];
+        if(authority[i] > MAX_D) authority[i] = MAX_D; 
 
         for(int d = 1; d <= authority[i]; d++) {
             count[i][d]++;
@@ -73,7 +72,7 @@ void switch_on_off(const int &c) {
     int level = 1;
     off[c] = !off[c];
     while(node != 0) {
-        for(int d = 0; d < MAX_D - level; d++) {
+        for(int d = 0; d < MAX_D + 1 - level; d++) {
             if(off[c]) {
                 count[node][d] -= count[c][d + level];
             } else {
@@ -85,83 +84,63 @@ void switch_on_off(const int &c) {
     }
 }
 
-void change_authority(const int &c, const int &power) {
+void change_authority(const int &c, int power) {
     if(off[c]) { return; }
     
     int prev_power = authority[c];
-    int start = min(prev_power, power);
-    int end = max(prev_power, power);
-    
-    if(start == end) return;
-
-    for(int d = start + 1; d <= end; d++) {
-        count[c][d] += (start == power ? -1 : 1);
-    }
-    // 0 0 1 1 1
-    // 0 1 1 1
+    power = min(MAX_D, power);
     int node = parents[c];
-    int level = 1;
-    while(level <= end) {
-        for(int d = max(start + 1 - level, 0); d <= (end - level); d++) {
-            if(power == start)
-                count[node][d]--;
-            else
-                count[node][d]++;
+    int level = 1;    
+    if(prev_power < power) {
+        for(int d = prev_power + 1; d <= power; d++) {
+            count[c][d]++;
         }
-        node = parents[node];
-        level++;
+
+        while(level <= power) {
+            for(int d = max(prev_power + 1 - level, 0); d <= power - level; d++) {
+                count[node][d]++;
+            }
+
+            node = parents[node];
+            level++;
+        }
+    } else if(prev_power > power) {
+        for(int d = power + 1; d <= prev_power; d++) {
+            count[c][d]--;
+        }
+
+        while(level <= prev_power) {
+            for(int d = max(power + 1 - level, 0); d <= prev_power - level; d++) {
+                count[node][d]--;
+            }
+
+            node = parents[node];
+            level++;
+        }
     }
+
+    authority[c] = power;
 }
 
 void change_parents(const int &c1, const int &c2) {
-    int node;
-    int level;
-
-    // 1.
-    node = parents[c1];
-    level = 1;
-    while(!off[c1] && node != 0) {
-        for(int d = 0; d < MAX_D - level; d++) {
-            count[node][d] -= count[c1][d + level];
-        }
-        node = parents[node];
-        level++;
+    const bool off_c1 = off[c1];
+    const bool off_c2 = off[c2];
+    if(!off_c1) {
+        switch_on_off(c1);
     }
-
-    // 2.
-    node = parents[c2];
-    level = 1;
-    while(!off[c2] && node != 0) {
-        for(int d = 0; d < MAX_D - level; d++) {
-            count[node][d] -= count[c2][d + level];
-        }
-        node = parents[node];
-        level++;   
+    if(!off_c2) {
+        switch_on_off(c2);
     }
 
     int tmp = parents[c1];
     parents[c1] = parents[c2];
     parents[c2] = tmp;
-    // 3.
-    node = parents[c1];
-    level = 1;
-    while(!off[c1] && node != 0) {
-        for(int d = 0; d < MAX_D - level; d++) {
-            count[node][d] += count[c1][d + level];
-        }
-        node = parents[node];
-        level++;
-    }
 
-    //4.
-    node = parents[c2];
-    level = 1;
-    while(!off[c2] && node != 0) {
-        for(int d = 0; d < MAX_D - level; d++) {
-            count[node][d] += count[c2][d + level];
-        }
-        node = parents[node];
-        level++;
+    if(!off_c1) {
+        switch_on_off(c1);
+    }
+    if(!off_c2) {
+        switch_on_off(c2);
     }
 }
 
@@ -198,6 +177,7 @@ int main() {
             display_count(c);
             break;
         }
+        // cout<<code<<endl;
         // cout << code << " " << c << " " << c1 << " " << c2 << " " << power << endl;
         // for(int i = 0; i <= N; ++i) {
         // cout << i << " : "; 
