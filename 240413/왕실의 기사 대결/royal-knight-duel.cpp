@@ -76,7 +76,7 @@ bool movable(const int &i, const int &d) {
         }
         break;
     case RIGHT:
-        if(c == L) { return false; }
+        if(c == L - width[i]) { return false; }
         for(int j = 0; j < height[i]; j++) {
             const int nr = r + j;
             const int nc = c + width[i];
@@ -91,7 +91,7 @@ bool movable(const int &i, const int &d) {
         }
         break;
     case DOWN:
-        if(r == L) { return false; }
+        if(r == L - height[i]) { return false; }
         for(int j = 0; j < width[i]; j++) {
             const int nr = r + height[i];
             const int nc = j + c;
