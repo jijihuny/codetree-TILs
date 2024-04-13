@@ -32,7 +32,7 @@ void eat(const bigint &t) {
             bigint curr_pos = (pos[cit->second] - (t - prev_t)) % L;
             if(curr_pos < 0) curr_pos += L;
 
-            auto begin = sushi[cit->second].lower_bound(prev_pos);
+            auto begin = sushi[cit->second].upper_bound(prev_pos);
             auto end = sushi[cit->second].upper_bound(curr_pos);
             
             if(curr_pos <= prev_pos) {
@@ -64,43 +64,43 @@ void eat(const bigint &t) {
             cit++;
         }
     }
+    prev_t = t;
 }
 
 void make_sushi(const bigint &t, const bigint &x, const string &name) {
     if(idx.find(name) == idx.end()) {
-        idx[name] = ++count;
+        idx[name] = count++;
     }
-    bigint pos = (x - t) % L;
-    if(pos < 0) pos += L;
-    sushi[idx[name]][pos]++;
+    bigint p = (x - t) % L;
+    if(p < 0) p += L;
+    sushi[idx[name]][p]++;
     sushi_count++;
     eat(t);
-    prev_t = t;
 }
 
 void insert(const bigint &t, const bigint &x, const string &name, const int &n) {
     eat(t);
     if(idx.find(name) == idx.end()) {
-        idx[name] = ++count;
+        idx[name] = count++;
     }
-    pos[idx[name]] = (x - t) % L;
-    if(pos[idx[name]] < 0) pos[idx[name]] += L;
-    needs[idx[name]] = n;
+    const int id = idx[name];
+    pos[id] = (x - t) % L;
+    if(pos[id] < 0) pos[id] += L;
+    needs[id] = n;
     customer_count++;
 
-    auto it = sushi[idx[name]].find(pos[idx[name]]);
+    auto it = sushi[id].find(pos[id]);
 
-    if(it != sushi[idx[name]].end()) {
-        needs[idx[name]] -= it->second;
+    if(it != sushi[id].end()) {
+        needs[id] -= it->second;
         sushi_count -= it->second;
-        sushi[idx[name]].erase(it);
-        if(needs[idx[name]] == 0) {
+        sushi[id].erase(it);
+        if(needs[id] == 0) {
             idx.erase(name);
             customer_count--;
         }
     }
     
-    prev_t = t;
 }
 
 void display(const bigint &t) {
@@ -108,7 +108,6 @@ void display(const bigint &t) {
 
     cout << customer_count << " " << sushi_count << endl;
 
-    prev_t = t;
 }
 
 int main() {
