@@ -35,15 +35,21 @@ def construct(edges):
         graph[u] += [(v, w)]
 
     shortest_path(0)
+delete_queue = set()
 
 def create_revenue(id, revenue, dest):
-    global cost, product
+    global cost, product, delete_queue
+    if id in delete_queue:
+        return
     product[id] = (revenue, dest)
     push(revenue_queue, ((cost[dest] if dest in cost else float('inf')) - revenue, id))
 
 def delete_revenue(id):
+    global product, delete_queue
     if id in product:
         del product[id]
+    else:
+        delete_queue |= {id}
 
 def selling():
     global revenue_queue, product
