@@ -12,9 +12,9 @@ def shortest_path(start):
     if start not in graph:
         graph[start] = []
     for adjacent, distance in graph[start]:
-        cost[adjacent] = distance
+        cost[adjacent] = min(cost[adjacent], distance)
         push(heap, (distance, adjacent))
-    visited = set()
+    visited = set({start})
     while heap:
         shortest, node = pop(heap)
         if node in visited:
@@ -39,17 +39,13 @@ delete_queue = set()
 
 def create_revenue(id, revenue, dest):
     global cost, product, delete_queue
-    if id in delete_queue:
-        return
     product[id] = (revenue, dest)
     push(revenue_queue, ((cost[dest] if dest in cost else float('inf')) - revenue, id))
 
 def delete_revenue(id):
-    global product, delete_queue
+    global product
     if id in product:
         del product[id]
-    else:
-        delete_queue |= {id}
 
 def selling():
     global revenue_queue, product
@@ -72,8 +68,6 @@ def change_start(start):
     shortest_path(start)
 
     for id, (revenue, dest) in product.items():
-        if id in delete_queue:
-            continue
         revenue_queue += [((cost[dest] if dest in cost else float('inf')) - revenue, id)]
     
     heapify(revenue_queue)
