@@ -41,9 +41,6 @@ def create_revenue(id, revenue, dest):
     product[id] = (revenue, dest)
     push(revenue_queue, ((cost[dest] if dest in cost else float('inf')) - revenue, id))
 
-
-deleted = set()
-
 def delete_revenue(id):
     if id in product:
         del product[id]
@@ -59,6 +56,8 @@ def selling():
             continue
         id = cid
         break
+    if id in product:
+        del product[id]
     return id
 
 def change_start(start):
