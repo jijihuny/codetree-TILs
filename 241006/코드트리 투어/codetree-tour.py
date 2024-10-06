@@ -40,7 +40,7 @@ delete_queue = set()
 def create_revenue(id, revenue, dest):
     global cost, product, delete_queue
     product[id] = (revenue, dest)
-    if revenue > (cost[dest] if dest in cost else float('inf')):
+    if revenue >= (cost[dest] if dest in cost else float('inf')):
         push(revenue_queue, (cost[dest] - revenue, id))
 
 def delete_revenue(id):
@@ -67,7 +67,7 @@ def change_start(start):
     shortest_path(start)
 
     for id, (revenue, dest) in product.items():
-        if revenue > (cost[dest] if dest in cost else float('inf')):
+        if revenue >= (cost[dest] if dest in cost else float('inf')):
             revenue_queue += [(cost[dest]  - revenue, id)]
     
     heapify(revenue_queue)
@@ -92,6 +92,8 @@ for i in range(Q):
         id = int(command[0])
         delete_revenue(id)
     elif t == '400':
+        # print(cost)
+        # print(revenue_queue)
         print(selling())
     elif t == '500':
         start = int(command[0])
