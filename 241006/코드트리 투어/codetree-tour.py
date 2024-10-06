@@ -40,7 +40,7 @@ delete_queue = set()
 def create_revenue(id, revenue, dest):
     global cost, product, delete_queue
     product[id] = (revenue, dest)
-    if revenue > cost[dest] if dest in cost else float('inf'):
+    if revenue > (cost[dest] if dest in cost else float('inf')):
         push(revenue_queue, (cost[dest] - revenue, id))
 
 def delete_revenue(id):
