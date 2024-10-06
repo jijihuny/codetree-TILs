@@ -1,6 +1,5 @@
 from heapq import heappush as push, heappop as pop, heapify
-import sys
-input = sys.stdin.readline
+
 INF = float('inf')
 graph = []
 cost = []
@@ -9,7 +8,7 @@ product = {}
 # O(VlogV + ElogV)
 def shortest_path(start):
     global graph, cost
-    cost = [INF] * len(graph)
+    cost = [float('inf')] * len(graph)
     cost[start] = 0
     heap = []
     for adjacent, distance in graph[start].items():
@@ -39,7 +38,7 @@ def construct(n, m, edges):
 def create_revenue(id, revenue, dest):
     global cost, product, delete_queue
     product[id] = (revenue, dest)
-    if revenue < cost[dest]:
+    if revenue >= cost[dest]:
         push(revenue_queue, (cost[dest] - revenue, id))
 
 # O(logP)
@@ -69,19 +68,19 @@ def change_start(start):
     shortest_path(start)
 
     for id, (revenue, dest) in product.items():
-        if revenue < cost[dest]:
+        if revenue >= cost[dest]:
             revenue_queue += [(cost[dest]  - revenue, id)]
     
     heapify(revenue_queue)
 
 
-Q = int(input().replace(' ', ''))
+Q = int(input())
 from collections import deque
 
 for i in range(Q):
     t, *command = input().split(' ')
-
-    if t == '100':
+    t = int(t)
+    if t == 100:
         n, m, *edges = command
         arr = []
         edges = deque(edges)
@@ -89,18 +88,14 @@ for i in range(Q):
             u, v, w = edges.popleft(), edges.popleft(), edges.popleft()
             arr += [(int(u), int(v), int(w))]
         construct(int(n), int(m), arr)
-        # print(graph)
-        # print(cost)
-    elif t == '200':
+    elif t == 200:
         id, revenue, dest = (int(j) for j in command)
         create_revenue(id, revenue, dest)
-    elif t == '300':
+    elif t == 300:
         id = int(command[0])
         delete_revenue(id)
-    elif t == '400':
-        # print(cost)
-        # print(revenue_queue)
+    elif t == 400:
         print(selling())
-    elif t == '500':
+    elif t == 500:
         start = int(command[0])
         change_start(start)
