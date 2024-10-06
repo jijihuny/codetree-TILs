@@ -40,7 +40,8 @@ delete_queue = set()
 def create_revenue(id, revenue, dest):
     global cost, product, delete_queue
     product[id] = (revenue, dest)
-    push(revenue_queue, ((cost[dest] if dest in cost else float('inf')) - revenue, id))
+    if revenue > cost[dest] if dest in cost else float('inf'):
+        push(revenue_queue, (cost[dest] - revenue, id))
 
 def delete_revenue(id):
     global product
@@ -53,8 +54,6 @@ def selling():
     while revenue_queue:
         income, cid = pop(revenue_queue)
         if cid not in product:
-            continue
-        if income > 0:
             continue
         id = cid
         break
