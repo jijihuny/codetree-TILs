@@ -67,7 +67,8 @@ def change_start(start):
     shortest_path(start)
 
     for id, (revenue, dest) in product.items():
-        revenue_queue += [((cost[dest] if dest in cost else float('inf')) - revenue, id)]
+        if revenue > (cost[dest] if dest in cost else float('inf')):
+            revenue_queue += [(cost[dest]  - revenue, id)]
     
     heapify(revenue_queue)
 
