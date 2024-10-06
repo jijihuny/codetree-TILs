@@ -1,17 +1,15 @@
 from heapq import heappush as push, heappop as pop, heapify
-graph = {}
-cost = {}
+graph = []
+cost = []
 revenue_queue = []
 product = {}
 # O(VlogV + ElogV)
 def shortest_path(start):
     global graph, cost
-    cost = {i: float('inf') for i in graph.keys()}
+    cost = [float('inf')] * len(graph)
     cost[start] = 0
     heap = []
-    if start not in graph:
-        graph[start] = []
-    for adjacent, distance in graph[start]:
+    for adjacent, distance in graph[start].items():
         cost[adjacent] = min(cost[adjacent], distance)
         push(heap, (distance, adjacent))
     visited = set({start})
@@ -20,19 +18,16 @@ def shortest_path(start):
         if node in visited:
             continue
         visited |= {node}
-        for adjacent, distance in graph[node]:
+        for adjacent, distance in graph[node].items():
             cost[adjacent] = min(cost[adjacent], shortest + distance)
             push(heap, (cost[adjacent], adjacent))
 
-def construct(edges):
+def construct(n, m, edges):
+    global graph
+    graph = [{} for i in range(n+1)]
     for v, u, w in edges:
-        if v not in graph:
-            graph[v] = []
-        if u not in graph:
-            graph[u] = []
-
-        graph[v] += [(u, w)]
-        graph[u] += [(v, w)]
+        graph[v][u] = min(w, graph[v][u] if u in graph[v] else float('inf'))
+        graph[u][v] = min(w, graph[u][v] if v in graph[u] else float('inf'))
 
     shortest_path(0)
 delete_queue = set()
@@ -40,7 +35,7 @@ delete_queue = set()
 def create_revenue(id, revenue, dest):
     global cost, product, delete_queue
     product[id] = (revenue, dest)
-    if revenue >= (cost[dest] if dest in cost else float('inf')):
+    if revenue >= cost[dest]:
         push(revenue_queue, (cost[dest] - revenue, id))
 
 def delete_revenue(id):
@@ -67,7 +62,7 @@ def change_start(start):
     shortest_path(start)
 
     for id, (revenue, dest) in product.items():
-        if revenue >= (cost[dest] if dest in cost else float('inf')):
+        if revenue >= cost[dest]:
             revenue_queue += [(cost[dest]  - revenue, id)]
     
     heapify(revenue_queue)
@@ -84,7 +79,9 @@ for i in range(Q):
         while edges:
             u, v, w, *edges = edges
             arr += [(int(u), int(v), int(w))]
-        construct(arr)
+        construct(int(n), int(m), arr)
+        # print(graph)
+        # print(cost)
     elif t == '200':
         id, revenue, dest = (int(j) for j in command)
         create_revenue(id, revenue, dest)
